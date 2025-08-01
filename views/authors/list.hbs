@@ -1,0 +1,74 @@
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <div class="user-info">
+            <h1>✍️ Gerenciar Autores</h1>
+        </div>
+        <div>
+            <a href="/authors/new" class="btn">Cadastrar Autor</a>
+            <a href="/dashboard" class="btn btn-secondary">Voltar</a>
+        </div>
+    </div>
+
+    {{#if error}}
+        <div class="error">{{error}}</div>
+    {{/if}}
+
+    {{#if success}}
+        <div class="success">{{success}}</div>
+    {{/if}}
+
+    <div class="card">
+        <h3>Lista de Autores</h3>
+        
+        {{#if authors.length}}
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                    <thead>
+                        <tr style="background-color: #f8f9fa;">
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">Nome</th>
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">Nacionalidade</th>
+                            <th style="padding: 12px; text-align: center; border-bottom: 2px solid #dee2e6;">Livros</th>
+                            <th style="padding: 12px; text-align: center; border-bottom: 2px solid #dee2e6;">Data de Nascimento</th>
+                            <th style="padding: 12px; text-align: center; border-bottom: 2px solid #dee2e6;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each authors}}
+                        <tr>
+                            <td style="padding: 12px; border-bottom: 1px solid #dee2e6;">
+                                <strong>{{name}}</strong>
+                            </td>
+                            <td style="padding: 12px; border-bottom: 1px solid #dee2e6;">{{nationality}}</td>
+                            <td style="padding: 12px; border-bottom: 1px solid #dee2e6; text-align: center;">
+                                <span style="background-color: #3498db; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px;">
+                                    {{#if books}}{{books.length}}{{else}}0{{/if}}
+                                </span>
+                            </td>
+                            <td style="padding: 12px; border-bottom: 1px solid #dee2e6; text-align: center;">
+                                {{#if birthDate}}
+                                    {{formatDate birthDate}}
+                                {{else}}
+                                    -
+                                {{/if}}
+                            </td>
+                            <td style="padding: 12px; border-bottom: 1px solid #dee2e6; text-align: center;">
+                                <a href="/authors/{{id}}" class="btn" style="margin: 2px; padding: 5px 10px; font-size: 12px;">Ver</a>
+                                <a href="/authors/{{id}}/edit" class="btn btn-secondary" style="margin: 2px; padding: 5px 10px; font-size: 12px;">Editar</a>
+                                <form method="POST" action="/authors/{{id}}/delete" style="display: inline;" onsubmit="return confirm('Excluir autor {{name}}?')">
+                                    <button type="submit" class="btn btn-danger" style="margin: 2px; padding: 5px 10px; font-size: 12px;">Excluir</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        {{else}}
+            <p style="text-align: center; margin: 30px 0; color: #7f8c8d;">
+                Nenhum autor cadastrado ainda.
+                <br><br>
+                <a href="/authors/new" class="btn">Cadastrar Primeiro Autor</a>
+            </p>
+        {{/if}}
+    </div>
+</div>

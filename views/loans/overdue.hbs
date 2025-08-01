@@ -1,0 +1,91 @@
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <div class="user-info">
+            <h1>🚨 Empréstimos em Atraso</h1>
+        </div>
+        <div>
+            <a href="/loans" class="btn btn-secondary">Todos os Empréstimos</a>
+            <a href="/dashboard" class="btn btn-secondary">Voltar</a>
+        </div>
+    </div>
+
+    {{#if error}}
+        <div class="error">{{error}}</div>
+    {{/if}}
+
+    {{#if success}}
+        <div class="success">{{success}}</div>
+    {{/if}}
+
+    <div class="card">
+        <h3>⚠️ Empréstimos em Atraso ({{loans.length}})</h3>
+        
+        {{#if loans.length}}
+            <div style="background-color: #f8d7da; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #dc3545;">
+                <p style="margin: 0; color: #721c24;">
+                    <strong>🚨 Atenção:</strong> Os empréstimos abaixo estão em atraso e precisam ser regularizados urgentemente.
+                </p>
+            </div>
+
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                    <thead>
+                        <tr style="background-color: #f8f9fa;">
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">Usuário</th>
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">Livro</th>
+                            <th style="padding: 12px; text-align: center; border-bottom: 2px solid #dee2e6;">Data Empréstimo</th>
+                            <th style="padding: 12px; text-align: center; border-bottom: 2px solid #dee2e6;">Vencimento</th>
+                            <th style="padding: 12px; text-align: center; border-bottom: 2px solid #dee2e6;">Dias em Atraso</th>
+                            <th style="padding: 12px; text-align: center; border-bottom: 2px solid #dee2e6;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each loans}}
+                        <tr style="background-color: #fff5f5;">
+                            <td style="padding: 12px; border-bottom: 1px solid #dee2e6;">
+                                <strong style="color: #e74c3c;">{{this.user.username}}</strong>
+                                <br><small>{{this.user.email}}</small>
+                            </td>
+                            <td style="padding: 12px; border-bottom: 1px solid #dee2e6;">
+                                <strong>{{this.book.title}}</strong>
+                                <br><small>{{this.book.author.name}}</small>
+                            </td>
+                            <td style="padding: 12px; border-bottom: 1px solid #dee2e6; text-align: center;">
+                                {{formatDate this.loanDate}}
+                            </td>
+                            <td style="padding: 12px; border-bottom: 1px solid #dee2e6; text-align: center;">
+                                <span style="color: #e74c3c; font-weight: bold;">
+                                    {{formatDate this.dueDate}}
+                                </span>
+                            </td>
+                            <td style="padding: 12px; border-bottom: 1px solid #dee2e6; text-align: center;">
+                                <span style="background-color: #e74c3c; color: white; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: bold;">
+                                    Em Atraso
+                                </span>
+                            </td>
+                            <td style="padding: 12px; border-bottom: 1px solid #dee2e6; text-align: center;">
+                                <a href="/loans/{{this.id}}" class="btn" style="margin: 2px; padding: 5px 10px; font-size: 12px;">Ver</a>
+                                <form style="display: inline;" action="/loans/{{this.id}}/return" method="POST">
+                                    <button type="submit" class="btn btn-danger" style="margin: 2px; padding: 5px 10px; font-size: 12px;" onclick="return confirm('Confirmar devolução?')">Devolver</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        {{else}}
+            <div style="text-align: center; margin: 30px 0;">
+                <div style="background-color: #d4edda; padding: 20px; border-radius: 10px; border-left: 4px solid #28a745;">
+                    <h4 style="color: #155724; margin: 0 0 10px 0;">✅ Parabéns!</h4>
+                    <p style="color: #155724; margin: 0;">
+                        Não há empréstimos em atraso no momento.
+                        <br>Todos os livros estão sendo devolvidos no prazo!
+                    </p>
+                </div>
+                <br>
+                <a href="/loans" class="btn">Ver Todos os Empréstimos</a>
+            </div>
+        {{/if}}
+    </div>
+</div>

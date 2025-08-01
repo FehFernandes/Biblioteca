@@ -1,0 +1,90 @@
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <div class="user-info">
+            <h1>📚 {{book.title}}</h1>
+        </div>
+        <div>
+            <a href="/books/{{book.id}}/edit" class="btn">Editar</a>
+            <a href="/books" class="btn btn-secondary">Voltar</a>
+        </div>
+    </div>
+
+    {{#if error}}
+        <div class="error">{{error}}</div>
+    {{/if}}
+
+    {{#if success}}
+        <div class="success">{{success}}</div>
+    {{/if}}
+
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+        <div class="card">
+            <h3>Informações do Livro</h3>
+            <div style="margin-top: 15px;">
+                <p><strong>Título:</strong> {{book.title}}</p>
+                <p><strong>Autor:</strong> {{book.author.name}}</p>
+                {{#if book.isbn}}
+                    <p><strong>ISBN:</strong> {{book.isbn}}</p>
+                {{/if}}
+                {{#if book.publishedYear}}
+                    <p><strong>Ano de Publicação:</strong> {{book.publishedYear}}</p>
+                {{/if}}
+                {{#if book.genre}}
+                    <p><strong>Gênero:</strong> {{book.genre}}</p>
+                {{/if}}
+                {{#if book.pages}}
+                    <p><strong>Páginas:</strong> {{book.pages}}</p>
+                {{/if}}
+                {{#if book.publisher}}
+                    <p><strong>Editora:</strong> {{book.publisher}}</p>
+                {{/if}}
+                <p><strong>Quantidade Total:</strong> {{book.quantity}}</p>
+                <p><strong>Disponível:</strong> 
+                    <span style="color: {{#if book.available}}#27ae60{{else}}#e74c3c{{/if}};">
+                        {{book.available}}
+                    </span>
+                </p>
+                <p><strong>Cadastrado em:</strong> {{formatDate book.createdAt}}</p>
+                {{#if book.updatedAt}}
+                    <p><strong>Última atualização:</strong> {{formatDate book.updatedAt}}</p>
+                {{/if}}
+            </div>
+
+            {{#if book.description}}
+                <div style="margin-top: 20px;">
+                    <h4>Descrição</h4>
+                    <p style="margin-top: 10px; line-height: 1.6;">{{book.description}}</p>
+                </div>
+            {{/if}}
+        </div>
+
+        <div class="card">
+            <h3>Ações Rápidas</h3>
+            <div style="margin-top: 15px;">
+                {{#if book.available}}
+                    <a href="/loans/new?bookId={{book.id}}" class="btn" style="width: 100%; margin-bottom: 10px;">
+                        📋 Novo Empréstimo
+                    </a>
+                {{else}}
+                    <p style="color: #e74c3c; margin-bottom: 10px;">
+                        📵 Sem exemplares disponíveis
+                    </p>
+                {{/if}}
+                
+                <a href="/books/{{book.id}}/edit" class="btn btn-secondary" style="width: 100%; margin-bottom: 10px;">
+                    ✏️ Editar Livro
+                </a>
+                
+                <form method="POST" action="/books/{{book.id}}/delete" style="margin-bottom: 10px;" onsubmit="return confirm('Tem certeza que deseja excluir este livro? Esta ação não pode ser desfeita.')">
+                    <button type="submit" class="btn btn-danger" style="width: 100%;">
+                        🗑️ Excluir Livro
+                    </button>
+                </form>
+                
+                <a href="/authors/{{book.author.id}}" class="btn btn-secondary" style="width: 100%;">
+                    👤 Ver Autor
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

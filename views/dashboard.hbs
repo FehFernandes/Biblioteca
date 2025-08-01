@@ -1,0 +1,102 @@
+<div class="navbar">
+    <div class="navbar-content">
+        <a href="/dashboard" class="navbar-brand">
+            📚 Sistema Biblioteca
+        </a>
+        <nav class="navbar-nav">
+            <a href="/dashboard" class="nav-link active">Dashboard</a>
+            <a href="/books" class="nav-link">Livros</a>
+            <a href="/authors" class="nav-link">Autores</a>
+            <a href="/loans" class="nav-link">Empréstimos</a>
+            <a href="/users" class="nav-link">Usuários</a>
+            <a href="/dashboard/profile" class="btn btn-secondary btn-sm">Perfil</a>
+            <a href="/auth/logout" class="btn btn-danger btn-sm">Sair</a>
+        </nav>
+    </div>
+</div>
+
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">
+                👋 Olá, {{user.username}}!
+            </h1>
+            <p class="text-muted">Bem-vindo ao sistema de gerenciamento da biblioteca</p>
+        </div>
+    </div>
+    
+    <div class="dashboard-cards">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">📚 Catálogo de Livros</h3>
+                <p class="card-description">Gerencie todo o acervo da biblioteca</p>
+            </div>
+            <div class="card-actions">
+                <a href="/books" class="btn btn-primary">📋 Ver Todos</a>
+                <a href="/books/new" class="btn btn-secondary">➕ Adicionar</a>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">✍️ Gestão de Autores</h3>
+                <p class="card-description">Cadastre e organize informações dos autores</p>
+            </div>
+            <div class="card-actions">
+                <a href="/authors" class="btn btn-primary">📋 Ver Todos</a>
+                <a href="/authors/new" class="btn btn-secondary">➕ Novo Autor</a>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">📋 Controle de Empréstimos</h3>
+                <p class="card-description">Monitore empréstimos e devoluções</p>
+            </div>
+            <div class="card-actions">
+                <a href="/loans" class="btn btn-primary">📋 Ver Todos</a>
+                <a href="/loans/new" class="btn btn-secondary">➕ Novo Empréstimo</a>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">👥 Gerenciar Usuários</h3>
+                <p class="card-description">Administre os usuários do sistema</p>
+            </div>
+            <div class="card-actions">
+                <a href="/users" class="btn btn-primary">📋 Ver Todos</a>
+                <a href="/users/new" class="btn btn-secondary">➕ Novo Usuário</a>
+            </div>
+        </div>
+    </div>
+    
+    {{#if recentActivity}}
+    <div class="card mt-6">
+        <div class="card-header">
+            <h3 class="card-title">📈 Atividade Recente</h3>
+            <p class="card-description">Últimas ações realizadas no sistema</p>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ação</th>
+                        <th>Usuário</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each recentActivity}}
+                    <tr>
+                        <td>{{this.action}}</td>
+                        <td>{{this.user}}</td>
+                        <td>{{formatDate this.date}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {{/if}}
+</div>

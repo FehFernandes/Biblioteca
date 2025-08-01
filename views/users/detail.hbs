@@ -1,0 +1,125 @@
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <div class="user-info">
+            <h1>👤 {{userDetail.username}}</h1>
+        </div>
+        <div>
+            <a href="/loans/new?userId={{userDetail.id}}" class="btn">Novo Empréstimo</a>
+            <a href="/users" class="btn btn-secondary">Voltar</a>
+        </div>
+    </div>
+
+    {{#if error}}
+        <div class="error">{{error}}</div>
+    {{/if}}
+
+    {{#if success}}
+        <div class="success">{{success}}</div>
+    {{/if}}
+
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+        <div class="card">
+            <h3>Informações do Usuário</h3>
+            <div style="margin-top: 15px;">
+                <p><strong>ID:</strong> {{userDetail.id}}</p>
+                <p><strong>Nome de usuário:</strong> {{userDetail.username}}</p>
+                <p><strong>Email:</strong> {{userDetail.email}}</p>
+                <p><strong>Data de cadastro:</strong> {{formatDate userDetail.createdAt}}</p>
+                {{#if userDetail.updatedAt}}
+                    <p><strong>Última atualização:</strong> {{formatDate userDetail.updatedAt}}</p>
+                {{/if}}
+                <p><strong>Total de empréstimos:</strong> {{userDetail.loans.length}}</p>
+                <p><strong>Status:</strong> <span style="color: #27ae60;">Ativo</span></p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Ações Rápidas</h3>
+            <div style="margin-top: 15px;">
+                <a href="/loans/new?userId={{userDetail.id}}" class="btn" style="width: 100%; margin-bottom: 10px;">
+                    📋 Novo Empréstimo
+                </a>
+                
+                {{#if (eq userDetail.id user.id)}}
+                    
+                {{else}}
+                    <form method="POST" action="/users/{{userDetail.id}}/delete" onsubmit="return confirm('Tem certeza que deseja excluir este usuário? Esta ação não pode ser desfeita.')">
+                        <button type="submit" class="btn btn-danger" style="width: 100%;">
+                            🗑️ Excluir Usuário
+                        </button>
+                    </form>
+                {{/if}}
+            </div>
+
+            <div style="margin-top: 20px; padding: 15px; background-color: #e8f4fd; border-radius: 5px;">
+                <h4 style="margin: 0 0 10px 0; color: #2c3e50;">📊 Estatísticas</h4>
+                <p style="margin: 5px 0; font-size: 14px;">
+                    <strong>Total de empréstimos:</strong> {{userDetail.loans.length}}
+                </p>
+                <p style="margin: 5px 0; font-size: 14px;">
+                    <strong>Empréstimos ativos:</strong> 
+                    {{#each userDetail.loans}}
+                        {{#if (eq this.status 'active')}}1{{else}}0{{/if}}
+                    {{else}}
+                        0
+                    {{/each}}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top: 20px;">
+        <h3>📚 Histórico de Empréstimos</h3>
+        
+        {{#if userDetail.loans.length}}
+            <div style="overflow-x: auto; margin-top: 15px;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background-color: #f8f9fa;">
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">Livro</th>
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">Autor</th>
+                            <th style="padding: 12px; text-align: center; border-bottom: 2px solid #dee2e6;">Data Empréstimo</th>
+                            <th style="padding: 12px; text-align: center; border-bottom: 2px solid #dee2e6;">Data Devolução</th>
+                            <th style="padding: 12px; text-align: center; border-bottom: 2px solid #dee2e6;">Status</th>
+                            <th style="padding: 12px; text-align: center; border-bottom: 2px solid #dee2e6;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each userDetail.loans}}
+                        <tr>
+                            <td style="padding: 12px; border-bottom: 1px solid #dee2e6;">
+                                <strong>{{this.book.title}}</strong>
+                            </td>
+                            <td style="padding: 12px; border-bottom: 1px solid #dee2e6;">{{this.book.author.name}}</td>
+                            <td style="padding: 12px; border-bottom: 1px solid #dee2e6; text-align: center;">
+                                {{formatDate this.loanDate}}
+                            </td>
+                            <td style="padding: 12px; border-bottom: 1px solid #dee2e6; text-align: center;">
+                                {{formatDate this.dueDate}}
+                            </td>
+                            <td style="padding: 12px; border-bottom: 1px solid #dee2e6; text-align: center;">
+                                {{#if (eq this.status 'active')}}
+                                    <span style="background-color: #3498db; color: white; padding: 4px 8px; border-radius: 12px; font-size: 12px;">Ativo</span>
+                                {{else if (eq this.status 'returned')}}
+                                    <span style="background-color: #27ae60; color: white; padding: 4px 8px; border-radius: 12px; font-size: 12px;">Devolvido</span>
+                                {{else if (eq this.status 'overdue')}}
+                                    <span style="background-color: #e74c3c; color: white; padding: 4px 8px; border-radius: 12px; font-size: 12px;">Em Atraso</span>
+                                {{/if}}
+                            </td>
+                            <td style="padding: 12px; border-bottom: 1px solid #dee2e6; text-align: center;">
+                                <a href="/loans/{{this.id}}" class="btn" style="padding: 5px 10px; font-size: 12px;">Ver</a>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        {{else}}
+            <p style="text-align: center; margin: 20px 0; color: #7f8c8d;">
+                Este usuário ainda não possui histórico de empréstimos.
+                <br><br>
+                <a href="/loans/new?userId={{userDetail.id}}" class="btn">Registrar Primeiro Empréstimo</a>
+            </p>
+        {{/if}}
+    </div>
+</div>

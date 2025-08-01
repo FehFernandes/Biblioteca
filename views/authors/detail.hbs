@@ -1,0 +1,111 @@
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <div class="user-info">
+            <h1>✍️ {{author.name}}</h1>
+        </div>
+        <div>
+            <a href="/authors/{{author.id}}/edit" class="btn">Editar</a>
+            <a href="/authors" class="btn btn-secondary">Voltar</a>
+        </div>
+    </div>
+
+    {{#if error}}
+        <div class="error">{{error}}</div>
+    {{/if}}
+
+    {{#if success}}
+        <div class="success">{{success}}</div>
+    {{/if}}
+
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+        <div class="card">
+            <h3>Informações do Autor</h3>
+            <div style="margin-top: 15px;">
+                <p><strong>Nome:</strong> {{author.name}}</p>
+                {{#if author.nationality}}
+                    <p><strong>Nacionalidade:</strong> {{author.nationality}}</p>
+                {{/if}}
+                {{#if author.birthDate}}
+                    <p><strong>Data de Nascimento:</strong> {{formatDate author.birthDate}}</p>
+                {{/if}}
+                <p><strong>Cadastrado em:</strong> {{formatDate author.createdAt}}</p>
+                {{#if author.updatedAt}}
+                    <p><strong>Última atualização:</strong> {{formatDate author.updatedAt}}</p>
+                {{/if}}
+            </div>
+
+            {{#if author.biography}}
+                <div style="margin-top: 20px;">
+                    <h4>Biografia</h4>
+                    <p style="margin-top: 10px; line-height: 1.6;">{{author.biography}}</p>
+                </div>
+            {{/if}}
+        </div>
+
+        <div class="card">
+            <h3>Ações Rápidas</h3>
+            <div style="margin-top: 15px;">
+                <a href="/authors/{{author.id}}/edit" class="btn btn-secondary" style="width: 100%; margin-bottom: 10px;">
+                    ✏️ Editar Autor
+                </a>
+                
+                <form method="POST" action="/authors/{{author.id}}/delete" style="margin-bottom: 10px;" onsubmit="return confirm('Tem certeza que deseja excluir este autor? Esta ação não pode ser desfeita.')">
+                    <button type="submit" class="btn btn-danger" style="width: 100%;">
+                        🗑️ Excluir Autor
+                    </button>
+                </form>
+                
+                <a href="/books/new?authorId={{author.id}}" class="btn" style="width: 100%;">
+                    📚 Cadastrar Livro
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {{#if author.books.length}}
+        <div class="card" style="margin-top: 20px;">
+            <h3>📚 Livros do Autor ({{author.books.length}})</h3>
+            <div style="overflow-x: auto; margin-top: 15px;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background-color: #f8f9fa;">
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">Título</th>
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">Ano</th>
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">Gênero</th>
+                            <th style="padding: 12px; text-align: center; border-bottom: 2px solid #dee2e6;">Disponível</th>
+                            <th style="padding: 12px; text-align: center; border-bottom: 2px solid #dee2e6;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each author.books}}
+                        <tr>
+                            <td style="padding: 12px; border-bottom: 1px solid #dee2e6;">
+                                <strong>{{this.title}}</strong>
+                            </td>
+                            <td style="padding: 12px; border-bottom: 1px solid #dee2e6;">{{this.publishedYear}}</td>
+                            <td style="padding: 12px; border-bottom: 1px solid #dee2e6;">{{this.genre}}</td>
+                            <td style="padding: 12px; border-bottom: 1px solid #dee2e6; text-align: center;">
+                                <span style="color: {{#if this.available}}#27ae60{{else}}#e74c3c{{/if}};">
+                                    {{this.available}}/{{this.quantity}}
+                                </span>
+                            </td>
+                            <td style="padding: 12px; border-bottom: 1px solid #dee2e6; text-align: center;">
+                                <a href="/books/{{this.id}}" class="btn" style="padding: 5px 10px; font-size: 12px;">Ver</a>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {{else}}
+        <div class="card" style="margin-top: 20px;">
+            <h3>📚 Livros do Autor</h3>
+            <p style="text-align: center; margin: 20px 0; color: #7f8c8d;">
+                Este autor ainda não possui livros cadastrados.
+                <br><br>
+                <a href="/books/new?authorId={{author.id}}" class="btn">Cadastrar Primeiro Livro</a>
+            </p>
+        </div>
+    {{/if}}
+</div>

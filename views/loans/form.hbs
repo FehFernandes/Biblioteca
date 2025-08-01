@@ -1,0 +1,94 @@
+<div class="navbar">
+    <div class="navbar-content">
+        <a href="/dashboard" class="navbar-brand">
+            📚 Sistema Biblioteca
+        </a>
+        <nav class="navbar-nav">
+            <a href="/dashboard" class="nav-link">Dashboard</a>
+            <a href="/books" class="nav-link">Livros</a>
+            <a href="/authors" class="nav-link">Autores</a>
+            <a href="/loans" class="nav-link active">Empréstimos</a>
+            <a href="/users" class="nav-link">Usuários</a>
+            <a href="/dashboard/profile" class="btn btn-secondary btn-sm">Perfil</a>
+            <a href="/auth/logout" class="btn btn-danger btn-sm">Sair</a>
+        </nav>
+    </div>
+</div>
+
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">
+                📋 Novo Empréstimo
+            </h1>
+            <p class="text-muted">Registre um novo empréstimo de livro</p>
+        </div>
+        <div class="dashboard-actions">
+            <a href="/loans" class="btn btn-secondary">← Voltar para Empréstimos</a>
+        </div>
+    </div>
+
+    {{#if error}}
+        <div class="alert alert-error">{{error}}</div>
+    {{/if}}
+
+    <div class="card">
+        <form action="{{action}}" method="{{method}}">
+            <div class="form-group">
+                <label for="userId">Usuário *</label>
+                <select id="userId" name="userId" required>
+                    <option value="">Selecione um usuário</option>
+                    {{#each users}}
+                        <option value="{{this.id}}">
+                            {{this.username}} ({{this.email}})
+                        </option>
+                    {{/each}}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="bookId">Livro *</label>
+                <select id="bookId" name="bookId" required>
+                    <option value="">Selecione um livro disponível</option>
+                    {{#each books}}
+                        <option value="{{this.id}}">
+                            {{this.title}} - {{this.author.name}} 
+                            {{#if this.available}}(Disponível){{else}}(Indisponível){{/if}}
+                        </option>
+                    {{/each}}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="notes">Observações</label>
+                <textarea 
+                    id="notes" 
+                    name="notes" 
+                    rows="3" 
+                    placeholder="Observações sobre o empréstimo (opcional)"
+                >{{loan.notes}}</textarea>
+            </div>
+
+            <div class="card" style="background: var(--border-light); margin-bottom: 1.5rem;">
+                <h4 style="margin: 0 0 1rem 0; color: var(--primary); display: flex; align-items: center; gap: 0.5rem;">
+                    ℹ️ Informações do Empréstimo
+                </h4>
+                <ul style="margin: 0; padding-left: 1.25rem; color: var(--text-secondary);">
+                    <li><strong>Prazo de devolução:</strong> 14 dias corridos</li>
+                    <li><strong>Data de devolução:</strong> Será calculada automaticamente</li>
+                    <li><strong>Status do livro:</strong> Ficará indisponível durante o empréstimo</li>
+                    <li><strong>Renovação:</strong> Pode ser solicitada antes do vencimento</li>
+                </ul>
+            </div>
+
+            <div class="flex gap-4">
+                <button type="submit" class="btn btn-primary">
+                    📋 Registrar Empréstimo
+                </button>
+                <a href="/loans" class="btn btn-secondary">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>

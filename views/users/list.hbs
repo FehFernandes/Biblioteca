@@ -1,0 +1,74 @@
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <div class="user-info">
+            <h1>👥 Gerenciar Usuários</h1>
+        </div>
+        <div>
+            <a href="/dashboard" class="btn btn-secondary">Voltar</a>
+        </div>
+    </div>
+
+    {{#if error}}
+        <div class="error">{{error}}</div>
+    {{/if}}
+
+    {{#if success}}
+        <div class="success">{{success}}</div>
+    {{/if}}
+
+    <div class="card">
+        <h3>Lista de Usuários</h3>
+        
+        {{#if users.length}}
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                    <thead>
+                        <tr style="background-color: #f8f9fa;">
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">Usuário</th>
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">Email</th>
+                            <th style="padding: 12px; text-align: center; border-bottom: 2px solid #dee2e6;">Empréstimos</th>
+                            <th style="padding: 12px; text-align: center; border-bottom: 2px solid #dee2e6;">Data Cadastro</th>
+                            <th style="padding: 12px; text-align: center; border-bottom: 2px solid #dee2e6;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each users}}
+                        <tr>
+                            <td style="padding: 12px; border-bottom: 1px solid #dee2e6;">
+                                <strong>{{this.username}}</strong>
+                                {{#if (eq this.id ../user.id)}}
+                                    <span style="background-color: #3498db; color: white; padding: 2px 6px; border-radius: 10px; font-size: 10px; margin-left: 5px;">Você</span>
+                                {{/if}}
+                            </td>
+                            <td style="padding: 12px; border-bottom: 1px solid #dee2e6;">{{this.email}}</td>
+                            <td style="padding: 12px; border-bottom: 1px solid #dee2e6; text-align: center;">
+                                <span style="background-color: #95a5a6; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px;">
+                                    {{this.loans.length}}
+                                </span>
+                            </td>
+                            <td style="padding: 12px; border-bottom: 1px solid #dee2e6; text-align: center;">
+                                {{formatDate this.createdAt}}
+                            </td>
+                            <td style="padding: 12px; border-bottom: 1px solid #dee2e6; text-align: center;">
+                                <a href="/users/{{this.id}}" class="btn" style="margin: 2px; padding: 5px 10px; font-size: 12px;">Ver Perfil</a>
+                                {{#unless (eq this.id ../user.id)}}
+                                    <a href="/loans/new?userId={{this.id}}" class="btn btn-secondary" style="margin: 2px; padding: 5px 10px; font-size: 12px;">Novo Empréstimo</a>
+                                    <form method="POST" action="/users/{{this.id}}/delete" style="display: inline;" onsubmit="return confirm('Excluir usuário {{this.username}}?')">
+                                        <button type="submit" class="btn btn-danger" style="margin: 2px; padding: 5px 10px; font-size: 12px;">Excluir</button>
+                                    </form>
+                                {{/unless}}
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        {{else}}
+            <p style="text-align: center; margin: 30px 0; color: #7f8c8d;">
+                Nenhum usuário cadastrado ainda.
+            </p>
+        {{/if}}
+    </div>
+
+    
+</div>

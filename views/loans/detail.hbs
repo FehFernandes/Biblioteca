@@ -1,0 +1,105 @@
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <div class="user-info">
+            <h1>📋 Empréstimo #{{loan.id}}</h1>
+        </div>
+        <div>
+            {{#if (eq loan.status 'active')}}
+                <form style="display: inline;" action="/loans/{{loan.id}}/return" method="POST">
+                    <button type="submit" class="btn" onclick="return confirm('Confirmar devolução?')">Devolver Livro</button>
+                </form>
+            {{/if}}
+            <a href="/loans" class="btn btn-secondary">Voltar</a>
+        </div>
+    </div>
+
+    {{#if error}}
+        <div class="error">{{error}}</div>
+    {{/if}}
+
+    {{#if success}}
+        <div class="success">{{success}}</div>
+    {{/if}}
+
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+        <div class="card">
+            <h3>Detalhes do Empréstimo</h3>
+            <div style="margin-top: 15px;">
+                <p><strong>ID do Empréstimo:</strong> #{{loan.id}}</p>
+                <p><strong>Usuário:</strong> {{loan.user.username}} ({{loan.user.email}})</p>
+                <p><strong>Livro:</strong> {{loan.book.title}}</p>
+                <p><strong>Autor:</strong> {{loan.book.author.name}}</p>
+                <p><strong>Data do Empréstimo:</strong> {{formatDate loan.loanDate}}</p>
+                <p><strong>Data de Devolução Prevista:</strong> {{formatDate loan.dueDate}}</p>
+                
+                {{#if loan.returnDate}}
+                    <p><strong>Data de Devolução Real:</strong> {{formatDate loan.returnDate}}</p>
+                {{/if}}
+                
+                <p><strong>Status:</strong> 
+                    {{#if (eq loan.status 'active')}}
+                        <span style="background-color: #3498db; color: white; padding: 4px 8px; border-radius: 12px;">Ativo</span>
+                    {{else if (eq loan.status 'returned')}}
+                        <span style="background-color: #27ae60; color: white; padding: 4px 8px; border-radius: 12px;">Devolvido</span>
+                    {{else if (eq loan.status 'overdue')}}
+                        <span style="background-color: #e74c3c; color: white; padding: 4px 8px; border-radius: 12px;">Em Atraso</span>
+                    {{/if}}
+                </p>
+                
+                <p><strong>Registrado em:</strong> {{formatDate loan.createdAt}}</p>
+                
+                {{#if loan.notes}}
+                    <div style="margin-top: 15px;">
+                        <p><strong>Observações:</strong></p>
+                        <p style="background-color: #f8f9fa; padding: 10px; border-radius: 5px; margin-top: 5px;">{{loan.notes}}</p>
+                    </div>
+                {{/if}}
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Ações Rápidas</h3>
+            <div style="margin-top: 15px;">
+                {{#if (eq loan.status 'active')}}
+                    <form action="/loans/{{loan.id}}/return" method="POST" style="margin-bottom: 10px;">
+                        <button type="submit" class="btn" style="width: 100%;" onclick="return confirm('Confirmar devolução do livro?')">
+                            ✅ Devolver Livro
+                        </button>
+                    </form>
+                {{/if}}
+                
+                <a href="/users/{{loan.user.id}}" class="btn btn-secondary" style="width: 100%; margin-bottom: 10px;">
+                    👤 Ver Usuário
+                </a>
+                
+                <a href="/books/{{loan.book.id}}" class="btn btn-secondary" style="width: 100%; margin-bottom: 10px;">
+                    📚 Ver Livro
+                </a>
+                
+                <form method="POST" action="/loans/{{loan.id}}/delete" onsubmit="return confirm('Tem certeza que deseja excluir este empréstimo? Esta ação não pode ser desfeita.')">
+                    <button type="submit" class="btn btn-danger" style="width: 100%;">
+                        🗑️ Excluir Empréstimo
+                    </button>
+                </form>
+            </div>
+
+            {{#if (eq loan.status 'active')}}
+                <div style="margin-top: 20px; padding: 15px; background-color: #fff3cd; border-radius: 5px; border-left: 4px solid #ffc107;">
+                    <h4 style="margin: 0 0 10px 0; color: #856404;">⏰ Lembrete</h4>
+                    <p style="margin: 0; color: #856404; font-size: 14px;">
+                        Este empréstimo está ativo. Lembre o usuário sobre a data de devolução.
+                    </p>
+                </div>
+            {{/if}}
+
+            {{#if (eq loan.status 'overdue')}}
+                <div style="margin-top: 20px; padding: 15px; background-color: #f8d7da; border-radius: 5px; border-left: 4px solid #dc3545;">
+                    <h4 style="margin: 0 0 10px 0; color: #721c24;">🚨 Atenção</h4>
+                    <p style="margin: 0; color: #721c24; font-size: 14px;">
+                        Este empréstimo está em atraso! Entre em contato com o usuário.
+                    </p>
+                </div>
+            {{/if}}
+        </div>
+    </div>
+</div>

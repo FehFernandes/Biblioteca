@@ -1,0 +1,170 @@
+<div class="navbar">
+    <div class="navbar-content">
+        <a href="/dashboard" class="navbar-brand">
+            📚 Sistema Biblioteca
+        </a>
+        <nav class="navbar-nav">
+            <a href="/dashboard" class="nav-link">Dashboard</a>
+            <a href="/books" class="nav-link active">Livros</a>
+            <a href="/authors" class="nav-link">Autores</a>
+            <a href="/loans" class="nav-link">Empréstimos</a>
+            <a href="/users" class="nav-link">Usuários</a>
+            <a href="/dashboard/profile" class="btn btn-secondary btn-sm">Perfil</a>
+            <a href="/auth/logout" class="btn btn-danger btn-sm">Sair</a>
+        </nav>
+    </div>
+</div>
+
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">
+                {{#if book.id}}📝 Editar Livro{{else}}📚 Novo Livro{{/if}}
+            </h1>
+            <p class="text-muted">
+                {{#if book.id}}Atualize as informações do livro{{else}}Adicione um novo livro ao catálogo{{/if}}
+            </p>
+        </div>
+        <div class="dashboard-actions">
+            <a href="/books" class="btn btn-secondary">← Voltar aos Livros</a>
+        </div>
+    </div>
+
+    {{#if error}}
+        <div class="alert alert-error">{{error}}</div>
+    {{/if}}
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">
+                {{#if book.id}}✏️ Editar Informações{{else}}➕ Cadastrar Livro{{/if}}
+            </h3>
+            <p class="card-description">Preencha os campos abaixo com as informações do livro</p>
+        </div>
+        
+        <form action="{{action}}" method="{{method}}">
+            <div class="form-group">
+                <label for="title">Título do Livro *</label>
+                <input 
+                    type="text" 
+                    id="title" 
+                    name="title" 
+                    value="{{book.title}}" 
+                    placeholder="Digite o título do livro"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="authorId">Autor *</label>
+                <select id="authorId" name="authorId" required>
+                    <option value="">Selecione o autor do livro</option>
+                    {{#each authors}}
+                        <option value="{{this.id}}" {{#if (eq this.id ../book.authorId)}}selected{{/if}}>
+                            {{this.name}}
+                        </option>
+                    {{/each}}
+                </select>
+                <div style="margin-top: 0.5rem;">
+                    <a href="/authors/new" style="color: var(--primary); text-decoration: none; font-size: 0.875rem;">
+                        ➕ Não encontrou o autor? Cadastre aqui
+                    </a>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label for="isbn">ISBN</label>
+                    <input 
+                        type="text" 
+                        id="isbn" 
+                        name="isbn" 
+                        value="{{book.isbn}}"
+                        placeholder="978-3-16-148410-0"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="publishedYear">Ano de Publicação</label>
+                    <input 
+                        type="number" 
+                        id="publishedYear" 
+                        name="publishedYear" 
+                        value="{{book.publishedYear}}" 
+                        min="1000" 
+                        max="2030"
+                        placeholder="2024"
+                    >
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label for="genre">Gênero</label>
+                    <input 
+                        type="text" 
+                        id="genre" 
+                        name="genre" 
+                        value="{{book.genre}}"
+                        placeholder="Ficção, Romance, etc."
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="pages">Número de Páginas</label>
+                    <input 
+                        type="number" 
+                        id="pages" 
+                        name="pages" 
+                        value="{{book.pages}}" 
+                        min="1"
+                        placeholder="300"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="quantity">Quantidade de Exemplares *</label>
+                    <input 
+                        type="number" 
+                        id="quantity" 
+                        name="quantity" 
+                        value="{{#if book.quantity}}{{book.quantity}}{{else}}1{{/if}}" 
+                        min="1" 
+                        required
+                        placeholder="1"
+                    >
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="publisher">Editora</label>
+                <input 
+                    type="text" 
+                    id="publisher" 
+                    name="publisher" 
+                    value="{{book.publisher}}"
+                    placeholder="Nome da editora"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="description">Descrição/Sinopse</label>
+                <textarea 
+                    id="description" 
+                    name="description" 
+                    rows="4" 
+                    placeholder="Escreva uma breve descrição ou sinopse do livro..."
+                >{{book.description}}</textarea>
+            </div>
+
+            <div class="flex gap-4">
+                <button type="submit" class="btn btn-primary">
+                    {{#if book.id}}📝 Atualizar Livro{{else}}📚 Cadastrar Livro{{/if}}
+                </button>
+                <a href="/books" class="btn btn-secondary">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
